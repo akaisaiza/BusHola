@@ -1,12 +1,12 @@
 package com.assigment.Holabus.Filter;
 
-import com.assigment.Holabus.Model.UserDetail;
 import com.assigment.Holabus.Service.UserService;
 import com.assigment.Holabus.Utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = parseJwt(request);
+            String jwt = getJwtHeader(request);
             if (jwt != null && _jwtUtils.validateAccessToken(jwt)) {
                 String email = _jwtUtils.getEmailFromJwtToken(jwt);
                 UserDetails user = _userService.loadUserByUsername(email);
@@ -44,6 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         user.getAuthorities()
                 );
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e.getMessage());
@@ -51,7 +52,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public String parseJwt(HttpServletRequest request) {
+    public String getJwtHeader(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer")) {
             return headerAuth.substring(7);

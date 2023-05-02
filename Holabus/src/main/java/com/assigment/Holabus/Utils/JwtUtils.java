@@ -1,6 +1,6 @@
 package com.assigment.Holabus.Utils;
 
-import com.assigment.Holabus.Model.UserDetail;
+import com.assigment.Holabus.Model.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -34,12 +35,12 @@ public class JwtUtils {
     }
 
     public String generateToken(Authentication authentication) {
-        UserDetail userPrincipal = (UserDetail) authentication.getPrincipal();
+        User userPrincipal = (User) authentication.getPrincipal();
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + jwtExpirationTime);
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
-                .claim("role", userPrincipal.getUser().getRole().getRoleName())
+                .claim("role", userPrincipal.getRole().getAuthority())
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(getSigningKey())
@@ -51,7 +52,7 @@ public class JwtUtils {
                 .parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
-                .parseClaimsJwt(jwtToken)
+                .parseClaimsJws(jwtToken)
                 .getBody()
                 .getSubject();
     }

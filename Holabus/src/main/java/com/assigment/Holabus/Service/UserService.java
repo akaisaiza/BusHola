@@ -1,7 +1,5 @@
 package com.assigment.Holabus.Service;
 
-import com.assigment.Holabus.Model.User;
-import com.assigment.Holabus.Model.UserDetail;
 import com.assigment.Holabus.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +19,6 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = _userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found."));
-        return new UserDetail(user);
+        return _userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found."));
     }
 }
