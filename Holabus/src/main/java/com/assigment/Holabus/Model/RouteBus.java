@@ -22,7 +22,7 @@ public class RouteBus {
     private int id;
     @Column(name = "busNum")
     @NotNull
-    private int busNum;
+    private Double busNum;
     @Column(name = "routeGroup")
     @NotNull
     private int group;
