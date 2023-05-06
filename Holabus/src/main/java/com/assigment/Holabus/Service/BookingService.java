@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.assigment.Holabus.Model.Booking;
 import com.assigment.Holabus.Repository.BookingRepository;
+
 @Service
 @Transactional
 public class BookingService {
-    
+
     @Autowired
     private BookingRepository bookingRepository;
 
