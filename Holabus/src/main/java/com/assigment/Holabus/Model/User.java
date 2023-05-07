@@ -40,7 +40,7 @@ public class User implements UserDetails {
     @Column(name = "fullName")
     private String fullName;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     @NotNull
     private Role role;

@@ -11,4 +11,9 @@ public class HolabusApplication {
     public static void main(String[] args) {
         SpringApplication.run(HolabusApplication.class, args);
     }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

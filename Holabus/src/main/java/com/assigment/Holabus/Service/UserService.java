@@ -18,30 +18,31 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
     private final UserRepository _userRepository;
-    @Autowired
     private DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public UserService(UserRepository userRepository, DepartmentRepository departmentRepository, PasswordEncoder passwordEncoder) {
         this._userRepository = userRepository;
+        this.departmentRepository = departmentRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public User changePassword(String email, String oldPassword, String newPassword) throws Exception {
-        User user = _userRepository.findByEmailchangepassUser(email);
+        Optional<User> user = _userRepository.findByEmail(email);
 
-        if (user == null) {
+        if (!user.isPresent()) {
             throw new Exception("User not found");
         }
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (!passwordEncoder.matches(oldPassword, user.get().getPassword())) {
             throw new Exception("Incorrect old password");
         }
 
-        user.setPassword(passwordEncoder.encode(newPassword));
-        _userRepository.save(user);
+        user.get().setPassword(passwordEncoder.encode(newPassword));
+        _userRepository.save(user.get());
 
-        return user;
+        return user.get();
     }
 
     @Override
@@ -59,4 +60,8 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public User getUserById(int id) {
+        Optional<User> user = _userRepository.findById(id);
+        return user.orElse(null);
+    }
 }

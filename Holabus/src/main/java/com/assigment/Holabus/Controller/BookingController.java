@@ -62,7 +62,6 @@ public class BookingController {
         return _bookingService.deleteBooking(id);
     }
 
-    //TODO: Book overtime bus
     @RequestMapping(value = "/overtime", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> bookingOvertimeBus(@Valid OvertimeBusDTO overtimeBusDTO) {

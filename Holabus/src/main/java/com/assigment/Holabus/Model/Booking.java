@@ -41,6 +41,8 @@ public class Booking {
     @Column(name = "purpose")
     @NotNull
     private String purpose;
+    @Column(name = "phoneNumber")
+    private String phoneNumber;
     @ManyToOne
     @JoinColumn(name = "requester", referencedColumnName = "userId")
     private User requester;
