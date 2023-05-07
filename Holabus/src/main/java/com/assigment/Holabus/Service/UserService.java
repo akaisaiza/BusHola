@@ -5,7 +5,10 @@ import com.assigment.Holabus.Model.User;
 import com.assigment.Holabus.Repository.DepartmentRepository;
 import com.assigment.Holabus.Repository.UserRepository;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -63,5 +66,32 @@ public class UserService implements UserDetailsService {
     public User getUserById(int id) {
         Optional<User> user = _userRepository.findById(id);
         return user.orElse(null);
+    }
+
+    public boolean addUser(User user) {
+        try {
+            _userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean deleteUser(User user) {
+        try {
+            _userRepository.delete(user);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    public Set<User> getAllUsers() {
+        Iterable<User> users = _userRepository.findAllByRoleId(2);
+        Set<User> userSet = new HashSet<>();
+        users.forEach(userSet::add);
+        return userSet;
     }
 }

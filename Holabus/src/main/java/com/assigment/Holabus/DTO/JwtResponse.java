@@ -9,4 +9,5 @@ import lombok.Setter;
 @Setter
 public class JwtResponse {
     private final String token;
+    private final String role;
 }

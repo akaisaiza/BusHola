@@ -1,6 +1,7 @@
 package com.assigment.Holabus.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ public class User implements UserDetails {
 
     @Column(name = "password")
     @NotNull
+    @JsonIgnore
     private String password;
 
     @Column(name = "phoneNumber")
@@ -45,37 +47,43 @@ public class User implements UserDetails {
     @NotNull
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "depId", referencedColumnName = "depId")
     @NotNull
     private Department department;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(role);
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return email;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }

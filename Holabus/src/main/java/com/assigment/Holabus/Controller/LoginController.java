@@ -2,6 +2,7 @@ package com.assigment.Holabus.Controller;
 
 import com.assigment.Holabus.DTO.JwtResponse;
 import com.assigment.Holabus.DTO.LoginDTO;
+import com.assigment.Holabus.Model.User;
 import com.assigment.Holabus.Utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ public class LoginController {
                 .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = _jwtUtils.generateToken(authentication);
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(new JwtResponse(jwt, user.getRole().getRoleName()));
     }
 }
